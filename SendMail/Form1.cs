@@ -19,21 +19,44 @@ namespace SendMail
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MailMessage mesajım = new MailMessage();
-            SmtpClient istemci = new SmtpClient();
-            istemci.UseDefaultCredentials = false;
-            istemci.Host = "smtp.outlook.com"; //sunucu bilgileri //smtp.gmail.com
-            istemci.Port = 587;
-            istemci.Credentials = new System.Net.NetworkCredential("Theonur212121@hotmail.com", "onur2121"); //kimlik bilgileri 
-            istemci.DeliveryMethod = SmtpDeliveryMethod.Network;
-            istemci.EnableSsl = true;
-            mesajım.To.Add(TxtWho.Text);//maili nereye gönderecez
-            mesajım.From = new MailAddress("Theonur212121@hotmail.com"); // mesajı kime göndercez
-            mesajım.Subject = txtTitle.Text;//title
-            mesajım.Body = txtMessage.Text;
-            istemci.Send(mesajım);
 
+            string[] array = new string[]
+            {
+                "Theonur212121@hotmail.com",
+                "metin.oget@atolla.com.tr",
+                 "onur.aslan@atolla.com.tr",
+            };
 
+            SendMail(array);
+
+        }
+        private static string SendMail(string [] mailAddress)
+        {
+            try
+            {
+
+                foreach (var item in mailAddress)
+                {
+                    MailMessage mesajım = new MailMessage();
+                    SmtpClient istemci = new SmtpClient("smtp.outlook.com", 587);
+                    istemci.UseDefaultCredentials = false;
+                    istemci.Credentials = new System.Net.NetworkCredential("Theonur212121@hotmail.com", "onur2121");
+                    istemci.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    istemci.EnableSsl = true;
+                    mesajım.To.Add(item);
+                    mesajım.From = new MailAddress("Theonur212121@hotmail.com");
+                    mesajım.Subject ="Subject";//title
+                    mesajım.Body = DateTime.UtcNow.ToString();
+                    istemci.Send(mesajım);
+                  
+                }
+            }
+            catch (SmtpException e)
+            {
+
+                return e.ToString();
+            }
+            return "Mail gönderme işlemi başarılı";
         }
     }
 }
